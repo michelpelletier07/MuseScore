@@ -56,6 +56,8 @@ void InstrumentSettingsModel::load(const QVariant& instrument)
     m_hideStavesWhenIndividuallyEmpty = part->hideStavesWhenIndividuallyEmpty();
     m_hasMultipleStaves = part->nstaves() > 1;
 
+    m_enablePlayerFeedback = part->enablePlayerFeedback();
+
     context()->currentNotationChanged().onNotify(this, [this]() {
         emit isMainScoreChanged();
     });
@@ -64,6 +66,8 @@ void InstrumentSettingsModel::load(const QVariant& instrument)
     emit hideWhenEmptyChanged();
     emit hideStavesWhenIndividuallyEmptyChanged();
     emit hasMultipleStavesChanged();
+
+    emit enablePlayerFeedbackChanged();
 }
 
 QString InstrumentSettingsModel::instrumentName() const
@@ -99,6 +103,11 @@ bool InstrumentSettingsModel::hasMultipleStaves() const
 bool InstrumentSettingsModel::isMainScore() const
 {
     return currentNotation() == currentMasterNotation();
+}
+
+bool InstrumentSettingsModel::enablePlayerFeedback() const
+{
+    return m_enablePlayerFeedback;
 }
 
 void InstrumentSettingsModel::setInstrumentName(const QString& name)
@@ -174,6 +183,28 @@ void InstrumentSettingsModel::setHideStavesWhenIndividuallyEmpty(bool value)
 
     m_hideStavesWhenIndividuallyEmpty = value;
     emit hideStavesWhenIndividuallyEmptyChanged();
+}
+
+void InstrumentSettingsModel::setEnablePlayerFeedback(bool value)
+{
+    if (m_enablePlayerFeedback == value || !notationParts()) {
+        return;
+    }
+
+    const Part* part = notationParts()->part(m_instrumentKey.partId);
+    if (!part) {
+        return;
+    }
+
+    currentNotation()->undoStack()->prepareChanges(muse::TranslatableString("undoableAction", "Change instrument settings"));
+
+    Part* mutablePart = const_cast<Part*>(part);
+    mutablePart->undoChangeProperty(Pid::ENABLE_PLAYER_FEEDBACK, PropertyValue(value));
+
+    currentNotation()->undoStack()->commitChanges();
+
+    m_enablePlayerFeedback = value;
+    emit enablePlayerFeedbackChanged();
 }
 
 INotationPtr InstrumentSettingsModel::currentNotation() const

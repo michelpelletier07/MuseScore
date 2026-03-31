@@ -215,6 +215,32 @@ StyledPopupView {
             width: parent.width
             spacing: 8
 
+            StyledTextLabel {
+                id: playerFeedbackLabel
+                width: parent.width
+                text: qsTrc("layoutpanel/instrumentsettingspopup", "Player feedback")
+                font: ui.theme.bodyBoldFont
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            ToggleButton {
+                id: playerFeedbackEnabled
+                width: parent.width
+                text: qsTrc("layoutpanel/instrumentsettingspopup", "Enable player feedback")
+                checked: settingsModel.enablePlayerFeedback === true
+                onToggled: {
+                    settingsModel.enablePlayerFeedback = !settingsModel.enablePlayerFeedback
+                }
+            }
+
+        }
+
+        SeparatorLine {}
+
+        Column {
+            width: parent.width
+            spacing: 8
+
             FlatButton {
                 width: parent.width
 

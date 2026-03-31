@@ -47,6 +47,8 @@ class InstrumentSettingsModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool hasMultipleStaves READ hasMultipleStaves NOTIFY hasMultipleStavesChanged)
     Q_PROPERTY(bool isMainScore READ isMainScore NOTIFY isMainScoreChanged)
 
+    Q_PROPERTY(bool enablePlayerFeedback READ enablePlayerFeedback WRITE setEnablePlayerFeedback NOTIFY enablePlayerFeedbackChanged)
+
     QML_ELEMENT
 
     muse::ContextInject<context::IGlobalContext> context = { this };
@@ -65,6 +67,8 @@ public:
 
     bool isMainScore() const;
 
+    bool enablePlayerFeedback() const;
+
 public slots:
     void setInstrumentName(const QString& name);
     void setAbbreviature(const QString& abbreviature);
@@ -72,12 +76,16 @@ public slots:
     void setHideWhenEmpty(int value);
     void setHideStavesWhenIndividuallyEmpty(bool value);
 
+    void setEnablePlayerFeedback(bool value);
+
 signals:
     void dataChanged();
     void hideWhenEmptyChanged();
     void hideStavesWhenIndividuallyEmptyChanged();
     void hasMultipleStavesChanged();
     void isMainScoreChanged();
+
+    void enablePlayerFeedbackChanged();
 
 private:
     notation::INotationPtr currentNotation() const;
@@ -91,5 +99,7 @@ private:
     int m_hideWhenEmpty = 0; // AutoOnOff::AUTO
     bool m_hideStavesWhenIndividuallyEmpty = false;
     bool m_hasMultipleStaves = false;
+
+    bool m_enablePlayerFeedback = false;
 };
 }
