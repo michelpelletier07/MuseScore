@@ -188,6 +188,9 @@ public:
     bool hideStavesWhenIndividuallyEmpty() const { return m_hideStavesWhenIndividuallyEmpty; }
     void setHideStavesWhenIndividuallyEmpty(bool v) { m_hideStavesWhenIndividuallyEmpty = v; }
 
+    bool enablePlayerFeedback() const { return m_enablePlayerFeedback; }
+    void setEnablePlayerFeedback(bool v) { m_enablePlayerFeedback = v; }
+
     PreferSharpFlat preferSharpFlat() const { return m_preferSharpFlat; }
     void setPreferSharpFlat(PreferSharpFlat v) { m_preferSharpFlat = v; }
 
@@ -215,6 +218,8 @@ private:
 
     /// Hide staves when they are individually empty, rather than only if all this part's staves are empty
     bool m_hideStavesWhenIndividuallyEmpty = false;
+
+    bool m_enablePlayerFeedback = false;
 
     PreferSharpFlat m_preferSharpFlat = PreferSharpFlat::AUTO;
 

@@ -67,7 +67,7 @@ void InstrumentSettingsModel::load(const QVariant& instrument)
     emit hideStavesWhenIndividuallyEmptyChanged();
     emit hasMultipleStavesChanged();
 
-    emit enablePlayerFeedbackChanged();
+    emit playerFeedbackChanged();
 }
 
 QString InstrumentSettingsModel::instrumentName() const
@@ -204,7 +204,7 @@ void InstrumentSettingsModel::setEnablePlayerFeedback(bool value)
     currentNotation()->undoStack()->commitChanges();
 
     m_enablePlayerFeedback = value;
-    emit enablePlayerFeedbackChanged();
+    emit playerFeedbackChanged();
 }
 
 INotationPtr InstrumentSettingsModel::currentNotation() const

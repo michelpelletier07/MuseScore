@@ -47,7 +47,7 @@ class InstrumentSettingsModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool hasMultipleStaves READ hasMultipleStaves NOTIFY hasMultipleStavesChanged)
     Q_PROPERTY(bool isMainScore READ isMainScore NOTIFY isMainScoreChanged)
 
-    Q_PROPERTY(bool enablePlayerFeedback READ enablePlayerFeedback WRITE setEnablePlayerFeedback NOTIFY enablePlayerFeedbackChanged)
+    Q_PROPERTY(bool enablePlayerFeedback READ enablePlayerFeedback WRITE setEnablePlayerFeedback NOTIFY playerFeedbackChanged)
 
     QML_ELEMENT
 
@@ -85,7 +85,7 @@ signals:
     void hasMultipleStavesChanged();
     void isMainScoreChanged();
 
-    void enablePlayerFeedbackChanged();
+    void playerFeedbackChanged();
 
 private:
     notation::INotationPtr currentNotation() const;

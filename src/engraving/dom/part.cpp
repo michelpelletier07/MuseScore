@@ -629,6 +629,8 @@ PropertyValue Part::getProperty(Pid id) const
         return instrument()->useDrumset();
     case Pid::PREFER_SHARP_FLAT:
         return int(preferSharpFlat());
+    case Pid::ENABLE_PLAYER_FEEDBACK:
+        return PropertyValue(m_enablePlayerFeedback);
     default:
         return PropertyValue();
     }
@@ -655,6 +657,9 @@ bool Part::setProperty(Pid id, const PropertyValue& property)
         break;
     case Pid::PREFER_SHARP_FLAT:
         setPreferSharpFlat(PreferSharpFlat(property.toInt()));
+        break;
+    case Pid::ENABLE_PLAYER_FEEDBACK:
+        setEnablePlayerFeedback(property.toBool());
         break;
     default:
         LOGD("Part::setProperty: unknown id %d", int(id));
