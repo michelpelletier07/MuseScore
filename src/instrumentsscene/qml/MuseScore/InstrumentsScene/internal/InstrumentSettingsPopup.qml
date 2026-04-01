@@ -23,6 +23,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
+import QtMultimedia
 
 import Muse.Ui
 import Muse.UiComponents
@@ -57,6 +59,21 @@ StyledPopupView {
 
     InstrumentSettingsModel {
         id: settingsModel
+    }
+
+    // Get access to media devices
+    MediaDevices {
+        id: mediaDevices
+    }
+
+    // The AudioInput element that will use the selected device
+    AudioInput {
+        id: audioInput
+    }
+
+    // Capture Session to start recording/processing
+    CaptureSession {
+        audioInput: audioInput
     }
 
     Column {
@@ -231,6 +248,60 @@ StyledPopupView {
                 onToggled: {
                     settingsModel.enablePlayerFeedback = !settingsModel.enablePlayerFeedback
                 }
+            }
+
+            StyledTextLabel {
+                id: audioInputLabel
+                width: parent.width
+                text: qsTrc("layoutpanel/instrumentsettingspopup", "Audio input")
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            ComboBox {
+                id: audioInputComboBox
+                width: parent.width
+
+                // Populate model with audio input descriptions
+                model: mediaDevices.audioInputs
+                textRole: "description" // Display friendly name
+
+                // Set current index to default device
+                Component.onCompleted: {
+                    for (var i = 0; i < model.length; i++) {
+                        if (model[i].isDefault) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                // Update the audioInput device when selection changes
+                onActivated: {
+                    audioInput.device = mediaDevices.audioInputs[currentIndex]
+                    console.log("Selected: " + audioInput.device.description)
+                }
+
+            }
+
+
+            StyledTextLabel {
+                id: audioLatencyLabel
+                width: parent.width
+                text: qsTrc("layoutpanel/instrumentsettingspopup", "Audio latency (ms)")
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            IncrementalPropertyControl {
+                width: parent.width
+                step: 1.000
+                decimals: 3
+                maxValue: 10000.000
+                minValue: -10000.000
+
+                currentValue: 0.000
+                // onValueEdited: function(newValue) {
+                //     settingsModel.number = newValue
+                // }
             }
 
         }
