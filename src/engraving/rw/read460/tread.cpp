@@ -71,7 +71,6 @@
 #include "../../dom/keysig.h"
 #include "../../dom/laissezvib.h"
 #include "../../dom/layoutbreak.h"
-#include "../../dom/layoutbreak.h"
 #include "../../dom/ledgerline.h"
 #include "../../dom/letring.h"
 #include "../../dom/line.h"
@@ -103,7 +102,6 @@
 #include "../../dom/rest.h"
 #include "../../dom/score.h"
 #include "../../dom/segment.h"
-#include "../../dom/sig.h"
 #include "../../dom/slur.h"
 #include "../../dom/slurtie.h"
 #include "../../dom/soundflag.h"
@@ -121,6 +119,7 @@
 #include "../../dom/system.h"
 #include "../../dom/systemdivider.h"
 #include "../../dom/systemtext.h"
+#include "../../dom/tapping.h"
 #include "../../dom/tempotext.h"
 #include "../../dom/text.h"
 #include "../../dom/textline.h"
@@ -3015,6 +3014,7 @@ void TRead::read(Harmony* h, XmlReader& e, ReadContext& ctx)
         } else if (TRead::readProperty(h, tag, e, ctx, Pid::HARMONY_DURATION)) {
         } else if (TRead::readProperty(h, tag, e, ctx, Pid::HARMONY_BASS_SCALE)) {
         } else if (TRead::readProperty(h, tag, e, ctx, Pid::HARMONY_DO_NOT_STACK_MODIFIERS)) {
+        } else if (TRead::readProperty(h, tag, e, ctx, Pid::EXCLUDE_VERTICAL_ALIGN)) {
         } else if (!readProperties(toTextBase(h), e, ctx)) {
             e.unknown();
         }
