@@ -56,7 +56,9 @@ void InstrumentSettingsModel::load(const QVariant& instrument)
     m_hideStavesWhenIndividuallyEmpty = part->hideStavesWhenIndividuallyEmpty();
     m_hasMultipleStaves = part->nstaves() > 1;
 
-    m_enablePlayerFeedback = part->enablePlayerFeedback();
+    m_enablePlayerFeedback = part->instrument()->enablePlayerFeedback();
+    m_playerFeedbackAudioInput = part->instrument()->playerFeedbackAudioInputAsPlainText();
+    m_playerFeedbackLatency = part->instrument()->playerFeedbackLatency();
 
     context()->currentNotationChanged().onNotify(this, [this]() {
         emit isMainScoreChanged();
@@ -108,6 +110,16 @@ bool InstrumentSettingsModel::isMainScore() const
 bool InstrumentSettingsModel::enablePlayerFeedback() const
 {
     return m_enablePlayerFeedback;
+}
+
+QString InstrumentSettingsModel::playerFeedbackAudioInput() const
+{
+    return m_playerFeedbackAudioInput;
+}
+
+float InstrumentSettingsModel::playerFeedbackLatency() const
+{
+    return m_playerFeedbackLatency;
 }
 
 void InstrumentSettingsModel::setInstrumentName(const QString& name)
@@ -191,20 +203,28 @@ void InstrumentSettingsModel::setEnablePlayerFeedback(bool value)
         return;
     }
 
-    const Part* part = notationParts()->part(m_instrumentKey.partId);
-    if (!part) {
+    m_enablePlayerFeedback = value;
+    notationParts()->setEnablePlayerFeedback(m_instrumentKey, value);
+}
+
+void InstrumentSettingsModel::setPlayerFeedbackAudioInput(const QString&  audioInputId)
+{
+    if (m_playerFeedbackAudioInput == audioInputId || !notationParts()) {
         return;
     }
 
-    currentNotation()->undoStack()->prepareChanges(muse::TranslatableString("undoableAction", "Change instrument settings"));
+    m_playerFeedbackAudioInput = audioInputId;
+    notationParts()->setPlayerFeedbackAudioInput(m_instrumentKey, audioInputId);
+}
 
-    Part* mutablePart = const_cast<Part*>(part);
-    mutablePart->undoChangeProperty(Pid::ENABLE_PLAYER_FEEDBACK, PropertyValue(value));
+void InstrumentSettingsModel::setPlayerFeedbackLatency(float value)
+{
+    if (m_playerFeedbackLatency == value || !notationParts()) {
+        return;
+    }
 
-    currentNotation()->undoStack()->commitChanges();
-
-    m_enablePlayerFeedback = value;
-    emit playerFeedbackChanged();
+    m_playerFeedbackLatency = value;
+    notationParts()->setPlayerFeedbackLatency(m_instrumentKey, value);
 }
 
 INotationPtr InstrumentSettingsModel::currentNotation() const

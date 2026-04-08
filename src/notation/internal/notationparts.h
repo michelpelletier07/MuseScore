@@ -64,6 +64,10 @@ public:
     void setStaffType(const muse::ID& staffId, StaffTypeId type) override;
     void setStaffConfig(const muse::ID& staffId, const StaffConfig& config, Fraction tick = Fraction(0, 1)) override;
 
+    void setEnablePlayerFeedback(const InstrumentKey& instrumentKey, bool value) override;
+    void setPlayerFeedbackAudioInput(const InstrumentKey& instrumentKey, const QString& audioInput) override;
+    void setPlayerFeedbackLatency(const InstrumentKey& instrumentKey, float value) override;
+
     void removeParts(const muse::IDList& partsIds) override;
     void removeStaves(const muse::IDList& stavesIds) override;
 

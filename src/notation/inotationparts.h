@@ -65,6 +65,10 @@ public:
     virtual void setStaffType(const muse::ID& staffId, StaffTypeId type) = 0;
     virtual void setStaffConfig(const muse::ID& staffId, const StaffConfig& config, Fraction tick = Fraction(0, 1)) = 0;
 
+    virtual void setEnablePlayerFeedback(const InstrumentKey& instrumentKey, bool value) = 0;
+    virtual void setPlayerFeedbackAudioInput(const InstrumentKey& instrumentKey, const QString& audioInput) = 0;
+    virtual void setPlayerFeedbackLatency(const InstrumentKey& instrumentKey, float value) = 0;
+
     virtual void removeParts(const muse::IDList& partsIds) = 0;
     virtual void removeStaves(const muse::IDList& stavesIds) = 0;
 

@@ -66,16 +66,6 @@ StyledPopupView {
         id: mediaDevices
     }
 
-    // The AudioInput element that will use the selected device
-    AudioInput {
-        id: audioInput
-    }
-
-    // Capture Session to start recording/processing
-    CaptureSession {
-        audioInput: audioInput
-    }
-
     Column {
         id: contentColumn
 
@@ -263,26 +253,31 @@ StyledPopupView {
 
                 // Populate model with audio input descriptions
                 model: mediaDevices.audioInputs
-                textRole: "description" // Display friendly name
+                textRole: "description"
 
-                // Set current index to default device
                 Component.onCompleted: {
-                    for (var i = 0; i < model.length; i++) {
-                        if (model[i].isDefault) {
-                            currentIndex = i;
-                            break;
+                    // Set current index to default device
+                    if (settingsModel.playerFeedbackAudioInput == "") {
+                        for (var i = 0; i < model.length; i++) {
+                            if (model[i].isDefault) {
+                                currentIndex = i;
+                                break;
+                            }
                         }
                     }
                 }
 
                 // Update the audioInput device when selection changes
                 onActivated: {
-                    audioInput.device = mediaDevices.audioInputs[currentIndex]
-                    console.log("Selected: " + audioInput.device.description)
+                    settingsModel.playerFeedbackAudioInput = mediaDevices.audioInputs[currentIndex].id
+                    console.info(
+                        "Selected audio input device: " + 
+                        mediaDevices.audioInputs[currentIndex].description +
+                        " (" + mediaDevices.audioInputs[currentIndex].id + ")"
+                    )
                 }
 
             }
-
 
             StyledTextLabel {
                 id: audioLatencyLabel
@@ -297,11 +292,11 @@ StyledPopupView {
                 decimals: 3
                 maxValue: 10000.000
                 minValue: -10000.000
+                currentValue: settingsModel.playerFeedbackLatency
 
-                currentValue: 0.000
-                // onValueEdited: function(newValue) {
-                //     settingsModel.number = newValue
-                // }
+                onValueEdited: function(newValue) {
+                    settingsModel.playerFeedbackLatency = newValue
+                }
             }
 
         }

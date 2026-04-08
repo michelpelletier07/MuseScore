@@ -48,6 +48,8 @@ class InstrumentSettingsModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool isMainScore READ isMainScore NOTIFY isMainScoreChanged)
 
     Q_PROPERTY(bool enablePlayerFeedback READ enablePlayerFeedback WRITE setEnablePlayerFeedback NOTIFY playerFeedbackChanged)
+    Q_PROPERTY(QString playerFeedbackAudioInput READ playerFeedbackAudioInput WRITE setPlayerFeedbackAudioInput NOTIFY playerFeedbackChanged)
+    Q_PROPERTY(float playerFeedbackLatency READ playerFeedbackLatency WRITE setPlayerFeedbackLatency NOTIFY playerFeedbackChanged)
 
     QML_ELEMENT
 
@@ -68,6 +70,8 @@ public:
     bool isMainScore() const;
 
     bool enablePlayerFeedback() const;
+    QString playerFeedbackAudioInput() const;
+    float playerFeedbackLatency() const;
 
 public slots:
     void setInstrumentName(const QString& name);
@@ -77,6 +81,8 @@ public slots:
     void setHideStavesWhenIndividuallyEmpty(bool value);
 
     void setEnablePlayerFeedback(bool value);
+    void setPlayerFeedbackAudioInput(const QString& audioInputId);
+    void setPlayerFeedbackLatency(float value);
 
 signals:
     void dataChanged();
@@ -101,5 +107,7 @@ private:
     bool m_hasMultipleStaves = false;
 
     bool m_enablePlayerFeedback = false;
+    QString m_playerFeedbackAudioInput;
+    float m_playerFeedbackLatency = 0.000;
 };
 }
