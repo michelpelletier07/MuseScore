@@ -31,17 +31,16 @@
 #include "../iaudioengineconfiguration.h"
 
 namespace muse::audio::engine {
-class EngineRpcController : public async::Asyncable, public muse::Contextable
+class EngineRpcController : public async::Asyncable
 {
     GlobalInject<IAudioEngineConfiguration> configuration;
     GlobalInject<synth::ISoundFontRepository> soundFontRepository;
-    ContextInject<rpc::IRpcChannel> channel = { this };
-    ContextInject<IAudioEngine> audioEngine = { this };
-    ContextInject<IEnginePlayback> playback = { this };
+    GlobalInject<rpc::IRpcChannel> channel;
+    GlobalInject<IAudioEngine> audioEngine;
+    GlobalInject<IEnginePlayback> playback;
 
 public:
-    EngineRpcController(const muse::modularity::ContextPtr& iocCtx)
-        : Contextable(iocCtx) {}
+    EngineRpcController() = default;
 
     void init();
     void deinit();
@@ -57,7 +56,6 @@ private:
 
     struct PendingTrack {
         rpc::Msg msg;
-        TrackSequenceId seqId;
         TrackName trackName;
         mpe::PlaybackData playbackData;
         AudioParams params;
@@ -66,7 +64,7 @@ private:
     std::map<std::string /*sfname*/, std::vector<PendingTrack> > m_pendingTracks;
     bool m_soundFontsChangedSubscribed = false;
 
-    async::Channel<TrackSequenceId, int64_t, int64_t, SaveSoundTrackStage> m_saveSoundTrackProgressStream;
+    async::Channel<int64_t, int64_t, SaveSoundTrackStage> m_saveSoundTrackProgressStream;
     rpc::StreamId m_saveSoundTrackProgressStreamId = 0;
 };
 }

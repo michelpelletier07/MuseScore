@@ -486,19 +486,13 @@ public:
     void undoRemoveHopoText(HammerOnPullOffText* hopoText);
     void undoChangeSpannerElements(Spanner* spanner, EngravingItem* startElement, EngravingItem* endElement);
     void undoChangeElement(EngravingItem* oldElement, EngravingItem* newElement);
-    void undoChangePitch(Note* note, int pitch, int tpc1, int tpc2);
-    void undoChangeFretting(Note* note, int pitch, int string, int fret, int tpc1, int tpc2);
     void spellNotelist(std::vector<Note*>& notes);
-    void undoChangeTpc(Note* note, int tpc);
     void undoChangeChordRestLen(ChordRest* cr, const TDuration&);
-    void undoExchangeVoice(Measure* measure, voice_idx_t val1, voice_idx_t val2, staff_idx_t staff1, staff_idx_t staff2);
     void undoRemovePart(Part* part, size_t partIdx = muse::nidx);
     void undoInsertPart(Part* part, size_t targetPartIndex);
     void undoRemoveStaff(Staff* staff);
     void undoInsertStaff(Staff* staff, staff_idx_t idx, bool createRests=true);
     void undoChangeVisible(EngravingItem* item, bool visible);
-    void undoChangeTuning(Note*, double);
-    void undoChangeUserMirror(Note*, DirectionH);
     void undoChangeKeySig(Staff* ostaff, const Fraction& tick, KeySigEvent);
     void undoChangeClef(Staff* ostaff, EngravingItem*, ClefType st, bool forInstrumentChange = false, Clef* clefToRelink = nullptr);
     bool undoPropertyChanged(EngravingItem* item, Pid propId, const PropertyValue& propValue,
@@ -548,18 +542,9 @@ public:
     std::vector<Rest*> setRests(const Fraction& tick, track_idx_t track, const Fraction& l, bool useDots, Tuplet* tuplet,
                                 bool useFullMeasureRest = true);
 
-    void upDown(bool up, UpDownMode);
-    void upDownDelta(int pitchDelta);
     ChordRest* searchNote(const Fraction& tick, track_idx_t track) const;
 
     // undo/redo ops
-    void toggleArticulation(SymId);
-    bool toggleArticulation(EngravingItem*, Articulation* atr);
-    void toggleOrnament(SymId);
-    void toggleAccidental(AccidentalType);
-    void changeAccidental(AccidentalType);
-    void changeAccidental(Note* oNote, AccidentalType);
-
     void addElement(EngravingItem*);
     void doUndoAddElement(EngravingItem*);
     void removeElement(EngravingItem*);
@@ -587,8 +572,6 @@ public:
 
     muse::Ret putNote(const PointF&, bool replace, bool insert);
     muse::Ret insertChordByInsertingTime(const Position&);
-
-    void cloneVoice(track_idx_t strack, track_idx_t dtrack, Segment* sf, const Fraction& lTick, bool link = true, bool spanner = true);
 
     muse::Ret repitchNote(const Position& pos, bool replace);
     std::pair<Note*, Note*> repitchReplaceNote(Chord*, const NoteVal&, bool forceAccidental = false);   // returns new note and last tied note
@@ -1016,12 +999,9 @@ public:
 
     void cmdInsertClef(Clef* clef, ChordRest* cr);
 
-    bool cmdExplode();
-    bool cmdImplode();
     void cmdSlashFill();
     void cmdSlashRhythm();
     void cmdResequenceRehearsalMarks();
-    void cmdExchangeVoice(voice_idx_t, voice_idx_t);
     void cmdRemoveEmptyTrailingMeasures();
     void cmdRealizeChordSymbols(bool lit = true, Voicing v = Voicing(-1), HDuration durationType = HDuration(-1));
 
@@ -1156,8 +1136,6 @@ private:
     void assignIdIfNeed(Part& part) const;
 
     void updateStavesNumberForSystems();
-
-    void applyAccidentalToInputNotes(AccidentalType accidentalType);
 
     Note* addPitchToChord(NoteVal&, Chord* chord, InputState* externalInputState = nullptr, bool forceAccidental = false);
     Note* addTiedMidiPitch(int pitch, bool addFlag, Chord* prevChord, bool allowTransposition);

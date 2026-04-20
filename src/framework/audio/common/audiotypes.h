@@ -57,9 +57,6 @@ using volume_dbfs_t = db_t;
 using gain_t = float;
 using balance_t = float;
 
-using TrackSequenceId = int32_t;
-using TrackSequenceIdList = std::vector<TrackSequenceId>;
-
 using TrackId = int32_t;
 using TrackIdList = std::vector<TrackId>;
 using TrackName = std::string;
@@ -170,11 +167,11 @@ enum class AudioResourceType {
     Undefined = -1,
     FluidSoundfont,
     VstPlugin,
-    MusePlugin,
+    NativeEffect,
     MuseSamplerSoundPack,
     Lv2Plugin,
     AudioUnit,
-    NyquistPlugin
+    NyquistPlugin,
 };
 
 static const std::map<AudioResourceType, QString> RESOURCE_TYPE_MAP = {
@@ -182,7 +179,10 @@ static const std::map<AudioResourceType, QString> RESOURCE_TYPE_MAP = {
     { AudioResourceType::MuseSamplerSoundPack, "muse_sampler_sound_pack" },
     { AudioResourceType::FluidSoundfont, "fluid_soundfont" },
     { AudioResourceType::VstPlugin, "vst_plugin" },
-    { AudioResourceType::MusePlugin, "muse_plugin" },
+    { AudioResourceType::NativeEffect, "muse_plugin" },
+    { AudioResourceType::Lv2Plugin, "lv2_plugin" },
+    { AudioResourceType::AudioUnit, "audio_unit" },
+    { AudioResourceType::NyquistPlugin, "nyquist_plugin" },
 };
 
 struct AudioResourceMeta {
@@ -257,7 +257,26 @@ enum class AudioFxCategory {
     FxRestoration,
     FxReverb,
     FxSurround,
-    FxTools
+    FxTools,
+    FxOther,
+};
+
+inline const std::unordered_map<AudioFxCategory, String> AUDIO_FX_CATEGORY_TO_STRING_MAP {
+    { AudioFxCategory::FxEqualizer, u"EQ" },
+    { AudioFxCategory::FxAnalyzer, u"Analyzer" },
+    { AudioFxCategory::FxDelay, u"Delay" },
+    { AudioFxCategory::FxDistortion, u"Distortion" },
+    { AudioFxCategory::FxDynamics, u"Dynamics" },
+    { AudioFxCategory::FxFilter, u"Filter" },
+    { AudioFxCategory::FxGenerator, u"Generator" },
+    { AudioFxCategory::FxMastering, u"Mastering" },
+    { AudioFxCategory::FxModulation, u"Modulation" },
+    { AudioFxCategory::FxPitchShift, u"Pitch Shift" },
+    { AudioFxCategory::FxRestoration, u"Restoration" },
+    { AudioFxCategory::FxReverb, u"Reverb" },
+    { AudioFxCategory::FxSurround, u"Surround" },
+    { AudioFxCategory::FxTools, u"Tools" },
+    { AudioFxCategory::FxOther, u"Fx" },
 };
 
 using AudioFxCategories = std::set<AudioFxCategory>;
@@ -274,7 +293,7 @@ struct AudioFxParams {
     {
         switch (resourceMeta.type) {
         case AudioResourceType::VstPlugin: return AudioFxType::VstFx;
-        case AudioResourceType::MusePlugin: return AudioFxType::MuseFx;
+        case AudioResourceType::NativeEffect: return AudioFxType::MuseFx;
         case AudioResourceType::AudioUnit:
         case AudioResourceType::Lv2Plugin:
         case AudioResourceType::FluidSoundfont:
@@ -362,7 +381,7 @@ inline AudioSourceType sourceTypeFromResourceType(AudioResourceType type)
     case AudioResourceType::MuseSamplerSoundPack: return AudioSourceType::MuseSampler;
     case AudioResourceType::AudioUnit:
     case AudioResourceType::Lv2Plugin:
-    case AudioResourceType::MusePlugin:
+    case AudioResourceType::NativeEffect:
     case AudioResourceType::NyquistPlugin:
     case AudioResourceType::Undefined: break;
     }
