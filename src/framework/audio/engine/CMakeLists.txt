@@ -40,13 +40,14 @@ else()
         iengineplayback.h
         iaudioengine.h
         iaudiosource.h
-        iclock.h
+        iplayhead.h
         iengineplayer.h
         ifxprocessor.h
         ifxresolver.h
         isynthesizer.h
         isynthresolver.h
         isoundfontrepository.h
+        itransporteventsdispatcher.h
 
         # internal
         internal/audioengineconfiguration.cpp
@@ -66,8 +67,6 @@ else()
         internal/mixer.h
         internal/mixerchannel.cpp
         internal/mixerchannel.h
-        internal/clock.cpp
-        internal/clock.h
         internal/igetplaybackposition.h
         internal/engineplayer.cpp
         internal/engineplayer.h
@@ -84,6 +83,8 @@ else()
         # internal/noisesource.h
         internal/abstracteventsequencer.h
         internal/audiosignalnotifier.h
+        internal/transporteventsdispatcher.cpp
+        internal/transporteventsdispatcher.h
 
         # DSP
         internal/dsp/envelopefilterconfig.h
